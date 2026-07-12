@@ -199,7 +199,6 @@
             dataVar: 'json_Rainfall_1',
             layerName: 'layer_Rainfall_1',
             pane: 'pane_Rainfall_1',
-            onEachFeature: pop_Rainfall_1,
             style: style_Rainfall_1_0,
         });
         bounds_group.addLayer(layer_Rainfall_1);
@@ -239,7 +238,6 @@
             dataVar: 'json_Phase1_Boundary_2',
             layerName: 'layer_Phase1_Boundary_2',
             pane: 'pane_Phase1_Boundary_2',
-            onEachFeature: pop_Phase1_Boundary_2,
             style: style_Phase1_Boundary_2_0,
         });
         bounds_group.addLayer(layer_Phase1_Boundary_2);
@@ -320,7 +318,6 @@
             dataVar: 'json_Aus_Soil_Class_3',
             layerName: 'layer_Aus_Soil_Class_3',
             pane: 'pane_Aus_Soil_Class_3',
-            onEachFeature: pop_Aus_Soil_Class_3,
             style: style_Aus_Soil_Class_3_0,
         });
         bounds_group.addLayer(layer_Aus_Soil_Class_3);
@@ -425,7 +422,6 @@
             dataVar: 'json_Land_Use_4',
             layerName: 'layer_Land_Use_4',
             pane: 'pane_Land_Use_4',
-            onEachFeature: pop_Land_Use_4,
             style: style_Land_Use_4_0,
         });
         bounds_group.addLayer(layer_Land_Use_4);
@@ -480,6 +476,31 @@
             }
         });
         map.addControl(new OpacityControl());
+        var CoordsControl = L.Control.extend({
+            options: { position: 'bottomright' },
+            onAdd: function(map) {
+                var container = L.DomUtil.create('div', 'leaflet-bar');
+                container.style.background = 'white';
+                container.style.padding = '4px 8px';
+                container.style.fontSize = '12px';
+                container.style.boxShadow = '0 1px 5px rgba(0,0,0,0.4)';
+                container.innerHTML = 'Lat: -- , Lng: --';
+                map.on('mousemove', function(e) {
+                    container.innerHTML = 'Lat: ' + e.latlng.lat.toFixed(5) + ', Lng: ' + e.latlng.lng.toFixed(5);
+                });
+                map.on('mouseout', function() {
+                    container.innerHTML = 'Lat: -- , Lng: --';
+                });
+                return container;
+            }
+        });
+        map.addControl(new CoordsControl());
+        map.on('click', function(e) {
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent('Lat: ' + e.latlng.lat.toFixed(5) + '<br>Lng: ' + e.latlng.lng.toFixed(5))
+                .openOn(map);
+        });
 		document.addEventListener("DOMContentLoaded", function() {
             // set new Layers List height which considers toggle icon
             function newLayersListHeight() {
